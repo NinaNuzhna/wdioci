@@ -116,12 +116,12 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="npm.report:open" />
-      <item itemvalue="npm.test:chrome:headless" />
       <item itemvalue="npm.report:generate" />
+      <item itemvalue="npm.report:open" />
+      <item itemvalue="npm.test:chrome" />
+      <item itemvalue="npm.test:chrome:headless" />
       <item itemvalue="npm.test:firefox" />
       <item itemvalue="npm.test:firefox:headless" />
-      <item itemvalue="npm.test:chrome" />
     </list>
     <recent_temporary>
       <list>
@@ -205,6 +205,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="639" height="265" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1612541977938" />
+    <state x="360" y="182" key="Vcs.Push.Dialog.v2" timestamp="1612543275635">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="360" y="182" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1612543275635" />
     <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1612375235866">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
