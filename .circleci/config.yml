@@ -44,8 +44,6 @@ jobs:
       - run:
           name: Run tests
           command: |
-#            npm run test:chrome:headless
-#            test -d allure-previous && cp -r allure-previous/allure-report/history allure-results | echo "Previous report directory not found"
             wget $(curl https://circleci.com/api/v1.1/project/github/NinaNuzhna/wdioci/latest/artifacts -H "Circle-Token $CIRCLE_TOKEN" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*') -O allure-previous.zip
             test -f allure-previous.zip && unzip allure-previous.zip -d allure-previous
             npm run test:chrome:headless
