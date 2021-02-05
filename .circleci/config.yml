@@ -69,13 +69,13 @@ workflows:
   commit:
     jobs:
       - build-and-test
-    nightly:
-      triggers:
-        - schedule:
-            cron: "0 0 * * *"
-            filters:
-              branches:
-                only:
-                  - master
-      jobs:
-        - build-and-test
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build-and-test
