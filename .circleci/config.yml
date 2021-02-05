@@ -24,16 +24,41 @@ jobs:
       # If you are using yarn instead npm, remove the line above and uncomment the two lines below.
       # - node/install-packages:
       #     pkg-manager: yarn
+#      - run:
+#            name: Get previous results
+#            command: |
+##                      команда wget загружает из Circleci allure-report, который был сделан в прошлом билде (берется из артифактов), т.е. через API получает json-файл
+##                      командой grep забираем ссылку на URL данного отчета
+##                      информацию можно найти в док-ции Circleci API/Artifacts
+#                       wget $(curl https://circleci.com/api/v1.1/project/github/NinaNuzhna/wdioci/latest/artifacts -H "Circle-Token $CIRCLE_TOKEN" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*') -O allure-previous.zip
+#                       test -f allure-previous.zip && unzip allure-previous.zip -d allure-previous
+#                       npm run test:chrome:headless
+#                       cp -r allure-previous/allure-report/history allure-results
+#                       npm run report:generate
+#                       zip -r allure-report.zip allure-report
+##              export ARTIFACT_LINK="https://circleci.com/api/v1.1/project/github/NinaNuzhna/wdioci/latest/artifacts"
+##              curl $ARTIFACT_LINK -H "Circle-Token $CIRCLE_TOKEN" | grep -Eoq '(http|https)://[a-zA-Z0-9./?=_%:-]*' && wget $(curl $ARTIFACT_LINK -H "Circle-Token $CIRCLE_TOKEN" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*') -O allure-previous.zip
+###              командой test мы проверяем есть ли allure-report от предидущего билда (если предидущий билд зафейлился ,то
+###              отчета не будет и упадет наш билд) и командой unzip распаковываем отчет в папку allure-previous
+##              test -f allure-previous.zip && unzip allure-previous.zip -d allure-previous || echo "Archive not found"
       - run:
           name: Run tests
           command: |
+#            npm run test:chrome:headless
+#            test -d allure-previous && cp -r allure-previous/allure-report/history allure-results | echo "Previous report directory not found"
+            wget $(curl https://circleci.com/api/v1.1/project/github/NinaNuzhna/wdioci/latest/artifacts -H "Circle-Token $CIRCLE_TOKEN" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*') -O allure-previous.zip
+            test -f allure-previous.zip && unzip allure-previous.zip -d allure-previous
             npm run test:chrome:headless
+            cp -r allure-previous/allure-report/history allure-results
             npm run report:generate
             zip -r allure-report.zip allure-report
       - run:
           when: on_fail
           name: Generate fail results
           command: |
+            wget $(curl https://circleci.com/api/v1.1/project/github/bormando/wdioci/latest/artifacts -H "Circle-Token $CIRCLE_TOKEN" | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*') -O allure-previous.zip
+            test -d allure-previous && cp -r allure-previous/allure-report/history allure-results | echo "Previous report directory not found"
+            cp -r allure-previous/allure-report/history allure-results
             npm run report:generate
             zip -r allure-report.zip allure-report
       - store_artifacts:
@@ -43,8 +68,16 @@ workflows:
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
   # CircleCI will run this workflow on every commit.
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
-  sample:
+  commit:
     jobs:
       - build-and-test
-      # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
-      # - node/test
+    nightly:
+      triggers:
+        - schedule:
+            cron: "0 0 * * *"
+            filters:
+              branches:
+                only:
+                  - master
+      jobs:
+        - build-and-test
